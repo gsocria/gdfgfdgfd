@@ -75,7 +75,6 @@ life = 3
 
 lifeBoss = 15
 
-
 pontos = 0
 
 triggered = False
@@ -87,9 +86,7 @@ alien_rect = alien.get_rect()
 missil_rect = missil.get_rect()
 missilBoss_rect = missilBoss.get_rect()
 
-# funções
-
-
+# funções respawn
 
 def respaw():
     x = 1350
@@ -102,6 +99,20 @@ def respaw_missil():
     respaw_missil_y = position_player_y 
     velocidade_missil_x = 0
     return [(respaw_missil_x + 20), (respaw_missil_y + 30), triggered, velocidade_missil_x]
+
+
+def respaw_missilBoss():
+    
+    print('cheguei aqui')
+    
+    respaw_missilBoss_x = position_boss_x
+    respaw_missilBoss_y = position_boss_y
+    velocidade_missilBoss_x = 0
+   
+    return [respaw_missilBoss_x, respaw_missilBoss_y, velocidade_missilBoss_x]
+
+
+#funçoes colisao
 
 def colisaoInimigo():
     global life
@@ -153,20 +164,23 @@ def colisaoMissil():
 
 
 
-def coliso_bossMissil():
+# def colisao_bossMissil():
 
-    global velocidade_missilBoss_x
-    global position_missilBoss_x
-    global position_boss_x
+#     global position_missilBoss_x
+#     global position_missilBoss_y
     
-
+#     print('tcheguei')
     
-    
+#     if position_missilBoss_x == 100:
+#         print('to aqui')
+#         position_missilBoss_x = respaw_missilBoss()[0]
+#         position_missilBoss_y = respaw_missilBoss()[1]
         
+        # position_missilBoss_x -= 4
         
-
-
-
+            
+        
+# jogo rodando
 
 while rodando:
     for event in pygame.event.get():
@@ -216,6 +230,8 @@ while rodando:
         triggered = respaw_missil()[2]
         velocidade_missil_x = respaw_missil()[3]
         
+        
+        
      
     #posição rect 
     
@@ -235,48 +251,58 @@ while rodando:
             
     # movimento / fases 
     
-    if pontos < 101:  
-        x -= 1.5 
-        position_alien_x -= 0.5 
-        position_missil_x += velocidade_missil_x
+    # if pontos < 101:  
+    #     x -= 1.5 
+    #     position_alien_x -= 0.5 
+    #     position_missil_x += velocidade_missil_x
     
-    elif pontos < 201: 
-        x -= 1.5 
-        position_alien_x -= 0.75
-        position_missil_x += velocidade_missil_x   
+    # elif pontos < 201: 
+    #     x -= 1.5 
+    #     position_alien_x -= 0.75
+    #     position_missil_x += velocidade_missil_x   
     
-    elif pontos < 301: 
-        x -= 1.5
-        position_alien_x -= 1
-        position_missil_x += velocidade_missil_x   
+    # elif pontos < 301: 
+    #     x -= 1.5
+    #     position_alien_x -= 1
+    #     position_missil_x += velocidade_missil_x   
     
-    elif pontos < 401: 
+    # el
+    if pontos < 101: 
         x -= 1.5 
         position_alien_x -= 1.5
         position_missil_x += velocidade_missil_x 
     
-    elif pontos >= 500: 
+    elif pontos >= 200: 
           
         screen.blit(boss, (position_boss_x, position_boss_y))
-        screen.blit(missilBoss, (position_missilBoss_x, position_missilBoss_y))
         
-        posicaoInicial = 1100
-        velocidade_missilBoss_x = 4
-        position_missilBoss_x -= velocidade_missilBoss_x
-        print('chegou aqui')
         
-        if position_missilBoss_x == 10:
-            position_missilBoss_x = posicaoInicial;  
-            print('foi')
         
-        x -= 1.5         
+        if position_missilBoss_x <= 1100:
+            position_missilBoss_x -= 3
+            print (position_missilBoss_x)
+            
+            
+            if position_missilBoss_x == 100:
+                position_missilBoss_x = respaw_missilBoss()[0]
+                position_missilBoss_y = respaw_missilBoss()[1]
+                velocidade_missilBoss_x = respaw_missilBoss()[2]
+                print(velocidade_missilBoss_x)
+            else:
+                print(' nao pegou o if')
+        else:
+            print('to qui')    
+
+    
+        x -= 1.5 
+       
         position_alien_x = 1300
         position_missil_x += velocidade_missil_x 
     
     # pygame.draw.rect(screen, (255, 0, 0), player_rect, 4)
     # pygame.draw.rect(screen, (255, 0, 0), alien_rect, 4)
     # pygame.draw.rect(screen, (255, 0, 0), missil_rect, 4)
-    # pygame.draw.rect(screen, (255, 0, 0), missilBoss_rect, 4)
+    pygame.draw.rect(screen, (255, 0, 0), missilBoss_rect, 4)
     
     
     score = font.render(str(pontos), True, (255,255,255))
@@ -287,6 +313,7 @@ while rodando:
     # posicao inicial do player e inimigo 
     screen.blit(missil, (position_missil_x, position_missil_y)) 
     screen.blit(player, (position_player_x, position_player_y))
+    screen.blit(missilBoss, (position_missilBoss_x, position_missilBoss_y))
     screen.blit(alien, (position_alien_x, position_alien_y))
 
   
